@@ -452,7 +452,7 @@ func recordPiece(environment ProviderDealEnvironment, deal storagemarket.MinerDe
 // CleanupDeal clears the filestore once we know the mining component has read the data and it is in a sealed sector
 func CleanupDeal(ctx fsm.Context, environment ProviderDealEnvironment, deal storagemarket.MinerDeal) error {
 	if deal.PiecePath != "" {
-		keepCar := os.Getenv("MARET_KEEP_OFFLINE_CAR")
+		keepCar := os.Getenv("MARKET_KEEP_OFFLINE_CAR")
 		if keepCar != "true" {
 			err := environment.FileStore().Delete(deal.PiecePath)
 			if err != nil {
