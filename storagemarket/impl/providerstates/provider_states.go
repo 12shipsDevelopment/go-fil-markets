@@ -304,7 +304,7 @@ func WaitForPublish(ctx fsm.Context, environment ProviderDealEnvironment, deal s
 	// for deal publishing
 	releaseReservedFunds(ctx, environment, deal)
 
-	return ctx.Trigger(storagemarket.ProviderEventDealPublished, res.DealID, res.FinalCid)
+	return ctx.Trigger(storagemarket.ProviderEventDealPublished, res.DealID, res.FinalCid, res.Height)
 }
 
 // HandoffDeal hands off a published deal for sealing and commitment in a sector
@@ -499,7 +499,7 @@ func VerifyDealPreCommitted(ctx fsm.Context, environment ProviderDealEnvironment
 		}
 	}
 
-	err := environment.Node().OnDealSectorPreCommitted(ctx.Context(), deal.Proposal.Provider, deal.DealID, deal.Proposal, deal.PublishCid, cb)
+	err := environment.Node().OnDealSectorPreCommitted(ctx.Context(), deal.Proposal.Provider, deal.DealID, deal.Proposal, deal.PublishCid, deal.PublishEpoch, cb)
 
 	if err != nil {
 		return ctx.Trigger(storagemarket.ProviderEventDealPrecommitFailed, err)
@@ -518,7 +518,7 @@ func VerifyDealActivated(ctx fsm.Context, environment ProviderDealEnvironment, d
 		}
 	}
 
-	err := environment.Node().OnDealSectorCommitted(ctx.Context(), deal.Proposal.Provider, deal.DealID, deal.SectorNumber, deal.Proposal, deal.PublishCid, cb)
+	err := environment.Node().OnDealSectorCommitted(ctx.Context(), deal.Proposal.Provider, deal.DealID, deal.SectorNumber, deal.Proposal, deal.PublishCid, deal.PublishEpoch, cb)
 
 	if err != nil {
 		return ctx.Trigger(storagemarket.ProviderEventDealActivationFailed, err)

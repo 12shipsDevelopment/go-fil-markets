@@ -371,6 +371,27 @@ func (t *ClientDeal) MarshalCBOR(w io.Writer) error {
 		return err
 	}
 
+	// t.PublishEpoch (abi.ChainEpoch) (int64)
+	if len("PublishEpoch") > cbg.MaxLength {
+		return xerrors.Errorf("Value in field \"PublishEpoch\" was too long")
+	}
+
+	if err := cbg.WriteMajorTypeHeaderBuf(scratch, w, cbg.MajTextString, uint64(len("PublishEpoch"))); err != nil {
+		return err
+	}
+	if _, err := io.WriteString(w, string("PublishEpoch")); err != nil {
+		return err
+	}
+
+	if t.PublishEpoch >= 0 {
+		if err := cbg.WriteMajorTypeHeaderBuf(scratch, w, cbg.MajUnsignedInt, uint64(t.PublishEpoch)); err != nil {
+			return err
+		}
+	} else {
+		if err := cbg.WriteMajorTypeHeaderBuf(scratch, w, cbg.MajNegativeInt, uint64(-t.PublishEpoch-1)); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -708,6 +729,32 @@ func (t *ClientDeal) UnmarshalCBOR(r io.Reader) error {
 
 			}
 
+			// t.PublishEpoch (abi.ChainEpoch) (int64)
+		case "PublishEpoch":
+			{
+				maj, extra, err := cbg.CborReadHeaderBuf(br, scratch)
+				var extraI int64
+				if err != nil {
+					return err
+				}
+				switch maj {
+				case cbg.MajUnsignedInt:
+					extraI = int64(extra)
+					if extraI < 0 {
+						return fmt.Errorf("int64 positive overflow")
+					}
+				case cbg.MajNegativeInt:
+					extraI = int64(extra)
+					if extraI < 0 {
+						return fmt.Errorf("int64 negative oveflow")
+					}
+					extraI = -1 - extraI
+				default:
+					return fmt.Errorf("wrong type for int64 field: %d", maj)
+				}
+
+				t.PublishEpoch = abi.ChainEpoch(extraI)
+			}
 		default:
 			// Field doesn't exist on this type, so ignore it
 			cbg.ScanForLinks(r, func(cid.Cid) {})
@@ -1106,6 +1153,29 @@ func (t *MinerDeal) MarshalCBOR(w io.Writer) error {
 	if _, err := io.WriteString(w, string(t.InboundCAR)); err != nil {
 		return err
 	}
+
+	// t.PublishEpoch (abi.ChainEpoch) (int64)
+	if len("PublishEpoch") > cbg.MaxLength {
+		return xerrors.Errorf("Value in field \"PublishEpoch\" was too long")
+	}
+
+	if err := cbg.WriteMajorTypeHeaderBuf(scratch, w, cbg.MajTextString, uint64(len("PublishEpoch"))); err != nil {
+		return err
+	}
+	if _, err := io.WriteString(w, string("PublishEpoch")); err != nil {
+		return err
+	}
+
+	if t.PublishEpoch >= 0 {
+		if err := cbg.WriteMajorTypeHeaderBuf(scratch, w, cbg.MajUnsignedInt, uint64(t.PublishEpoch)); err != nil {
+			return err
+		}
+	} else {
+		if err := cbg.WriteMajorTypeHeaderBuf(scratch, w, cbg.MajNegativeInt, uint64(-t.PublishEpoch-1)); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -1445,6 +1515,32 @@ func (t *MinerDeal) UnmarshalCBOR(r io.Reader) error {
 				t.InboundCAR = string(sval)
 			}
 
+			// t.PublishEpoch (abi.ChainEpoch) (int64)
+		case "PublishEpoch":
+			{
+				maj, extra, err := cbg.CborReadHeaderBuf(br, scratch)
+				var extraI int64
+				if err != nil {
+					return err
+				}
+				switch maj {
+				case cbg.MajUnsignedInt:
+					extraI = int64(extra)
+					if extraI < 0 {
+						return fmt.Errorf("int64 positive overflow")
+					}
+				case cbg.MajNegativeInt:
+					extraI = int64(extra)
+					if extraI < 0 {
+						return fmt.Errorf("int64 negative oveflow")
+					}
+					extraI = -1 - extraI
+				default:
+					return fmt.Errorf("wrong type for int64 field: %d", maj)
+				}
+
+				t.PublishEpoch = abi.ChainEpoch(extraI)
+			}
 		default:
 			// Field doesn't exist on this type, so ignore it
 			cbg.ScanForLinks(r, func(cid.Cid) {})

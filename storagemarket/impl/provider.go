@@ -555,6 +555,7 @@ func (p *Provider) processDealStatusRequest(ctx context.Context, request *networ
 		PublishCid:    md.PublishCid,
 		DealID:        md.DealID,
 		FastRetrieval: md.FastRetrieval,
+		PublishEpoch:  md.PublishEpoch,
 	}, nil
 }
 
