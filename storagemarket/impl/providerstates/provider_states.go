@@ -582,11 +582,13 @@ func FailDeal(ctx fsm.Context, environment ProviderDealEnvironment, deal storage
 	log.Warnf("deal %s failed: %s", deal.ProposalCid, deal.Message)
 
 	environment.UntagPeer(deal.Client, deal.ProposalCid.String())
-
 	if deal.PiecePath != filestore.Path("") {
-		err := environment.FileStore().Delete(deal.PiecePath)
-		if err != nil {
-			log.Warnf("deleting piece at path %s: %w", deal.PiecePath, err)
+		keepCar := os.Getenv("MARKET_KEEP_OFFLINE_CAR")
+		if keepCar != "true" {
+			err := environment.FileStore().Delete(deal.PiecePath)
+			if err != nil {
+				log.Warnf("deleting piece at path %s: %w", deal.PiecePath, err)
+			}
 		}
 	}
 	if deal.MetadataPath != filestore.Path("") {
