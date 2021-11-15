@@ -1342,31 +1342,31 @@ func (t *MinerDeal) UnmarshalCBOR(r io.Reader) error {
 				t.MetadataPath = filestore.Path(sval)
 			}
 			// t.SlashEpoch (abi.ChainEpoch) (int64)
-		//case "SlashEpoch":
-		//	{
-		//		maj, extra, err := cbg.CborReadHeaderBuf(br, scratch)
-		//		var extraI int64
-		//		if err != nil {
-		//			return err
-		//		}
-		//		switch maj {
-		//		case cbg.MajUnsignedInt:
-		//			extraI = int64(extra)
-		//			if extraI < 0 {
-		//				return fmt.Errorf("int64 positive overflow")
-		//			}
-		//		case cbg.MajNegativeInt:
-		//			extraI = int64(extra)
-		//			if extraI < 0 {
-		//				return fmt.Errorf("int64 negative oveflow")
-		//			}
-		//			extraI = -1 - extraI
-		//		default:
-		//			return fmt.Errorf("wrong type for int64 field: %d", maj)
-		//		}
-		//
-		//		t.SlashEpoch = abi.ChainEpoch(extraI)
-		//	}
+		case "SlashEpoch":
+			{
+				maj, extra, err := cbg.CborReadHeaderBuf(br, scratch)
+				var extraI int64
+				if err != nil {
+					return err
+				}
+				switch maj {
+				case cbg.MajUnsignedInt:
+					extraI = int64(extra)
+					if extraI < 0 {
+						return fmt.Errorf("int64 positive overflow")
+					}
+				case cbg.MajNegativeInt:
+					extraI = int64(extra)
+					if extraI < 0 {
+						return fmt.Errorf("int64 negative oveflow")
+					}
+					extraI = -1 - extraI
+				default:
+					return fmt.Errorf("wrong type for int64 field: %d", maj)
+				}
+
+				t.SlashEpoch = abi.ChainEpoch(extraI)
+			}
 			// t.FastRetrieval (bool) (bool)
 		case "FastRetrieval":
 
