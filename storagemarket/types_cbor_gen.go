@@ -29,7 +29,7 @@ func (t *ClientDeal) MarshalCBOR(w io.Writer) error {
 		_, err := w.Write(cbg.CborNull)
 		return err
 	}
-	if _, err := w.Write([]byte{179}); err != nil {
+	if _, err := w.Write([]byte{180}); err != nil {
 		return err
 	}
 
@@ -768,7 +768,7 @@ func (t *MinerDeal) MarshalCBOR(w io.Writer) error {
 		_, err := w.Write(cbg.CborNull)
 		return err
 	}
-	if _, err := w.Write([]byte{180}); err != nil {
+	if _, err := w.Write([]byte{181}); err != nil {
 		return err
 	}
 
@@ -1166,6 +1166,7 @@ func (t *MinerDeal) MarshalCBOR(w io.Writer) error {
 		return err
 	}
 
+	log.Infof("t.PublishEpoch: %v", t.PublishEpoch)
 	if t.PublishEpoch >= 0 {
 		if err := cbg.WriteMajorTypeHeaderBuf(scratch, w, cbg.MajUnsignedInt, uint64(t.PublishEpoch)); err != nil {
 			return err
@@ -1341,31 +1342,31 @@ func (t *MinerDeal) UnmarshalCBOR(r io.Reader) error {
 				t.MetadataPath = filestore.Path(sval)
 			}
 			// t.SlashEpoch (abi.ChainEpoch) (int64)
-		case "SlashEpoch":
-			{
-				maj, extra, err := cbg.CborReadHeaderBuf(br, scratch)
-				var extraI int64
-				if err != nil {
-					return err
-				}
-				switch maj {
-				case cbg.MajUnsignedInt:
-					extraI = int64(extra)
-					if extraI < 0 {
-						return fmt.Errorf("int64 positive overflow")
-					}
-				case cbg.MajNegativeInt:
-					extraI = int64(extra)
-					if extraI < 0 {
-						return fmt.Errorf("int64 negative oveflow")
-					}
-					extraI = -1 - extraI
-				default:
-					return fmt.Errorf("wrong type for int64 field: %d", maj)
-				}
-
-				t.SlashEpoch = abi.ChainEpoch(extraI)
-			}
+		//case "SlashEpoch":
+		//	{
+		//		maj, extra, err := cbg.CborReadHeaderBuf(br, scratch)
+		//		var extraI int64
+		//		if err != nil {
+		//			return err
+		//		}
+		//		switch maj {
+		//		case cbg.MajUnsignedInt:
+		//			extraI = int64(extra)
+		//			if extraI < 0 {
+		//				return fmt.Errorf("int64 positive overflow")
+		//			}
+		//		case cbg.MajNegativeInt:
+		//			extraI = int64(extra)
+		//			if extraI < 0 {
+		//				return fmt.Errorf("int64 negative oveflow")
+		//			}
+		//			extraI = -1 - extraI
+		//		default:
+		//			return fmt.Errorf("wrong type for int64 field: %d", maj)
+		//		}
+		//
+		//		t.SlashEpoch = abi.ChainEpoch(extraI)
+		//	}
 			// t.FastRetrieval (bool) (bool)
 		case "FastRetrieval":
 
@@ -1540,6 +1541,7 @@ func (t *MinerDeal) UnmarshalCBOR(r io.Reader) error {
 				}
 
 				t.PublishEpoch = abi.ChainEpoch(extraI)
+				log.Infof("read t.PublishEpoch: %v", t.PublishEpoch)
 			}
 		default:
 			// Field doesn't exist on this type, so ignore it
