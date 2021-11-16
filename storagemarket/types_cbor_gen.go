@@ -1166,7 +1166,6 @@ func (t *MinerDeal) MarshalCBOR(w io.Writer) error {
 		return err
 	}
 
-	log.Infof("t.PublishEpoch: %v", t.PublishEpoch)
 	if t.PublishEpoch >= 0 {
 		if err := cbg.WriteMajorTypeHeaderBuf(scratch, w, cbg.MajUnsignedInt, uint64(t.PublishEpoch)); err != nil {
 			return err
@@ -1541,7 +1540,6 @@ func (t *MinerDeal) UnmarshalCBOR(r io.Reader) error {
 				}
 
 				t.PublishEpoch = abi.ChainEpoch(extraI)
-				log.Infof("read t.PublishEpoch: %v", t.PublishEpoch)
 			}
 		default:
 			// Field doesn't exist on this type, so ignore it
