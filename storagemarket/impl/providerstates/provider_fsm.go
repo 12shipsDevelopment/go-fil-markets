@@ -127,9 +127,10 @@ var ProviderEvents = fsm.Events{
 		}),
 	fsm.Event(storagemarket.ProviderEventDealPublished).
 		From(storagemarket.StorageDealPublishing).To(storagemarket.StorageDealStaged).
-		Action(func(deal *storagemarket.MinerDeal, dealID abi.DealID, finalCid cid.Cid) error {
+		Action(func(deal *storagemarket.MinerDeal, dealID abi.DealID, finalCid cid.Cid, height abi.ChainEpoch) error {
 			deal.DealID = dealID
 			deal.PublishCid = &finalCid
+			deal.PublishEpoch = height
 			return nil
 		}),
 	fsm.Event(storagemarket.ProviderEventFileStoreErrored).

@@ -345,7 +345,7 @@ func (c *Client) ProposeStorageDeal(ctx context.Context, params storagemarket.Pr
 			return nil, xerrors.Errorf("failed to get blockstore for imported root %s: %w", params.Data.Root, err)
 		}
 
-		commP, pieceSize, err := clientutils.CommP(ctx, bs, params.Data, c.maxTraversalLinks)
+		commP, pieceSize, err = clientutils.CommP(ctx, bs, params.Data, c.maxTraversalLinks)
 		if err != nil {
 			return nil, xerrors.Errorf("computing commP failed: %w", err)
 		}

@@ -278,79 +278,91 @@ func (p *Provider) Stop() error {
 // ImportDataForDeal manually imports data for an offline storage deal
 // It will verify that the data in the passed io.Reader matches the expected piece
 // cid for the given deal or it will error
-func (p *Provider) ImportDataForDeal(ctx context.Context, propCid cid.Cid, data io.Reader) error {
+func (p *Provider) ImportDataForDeal(ctx context.Context, propCid cid.Cid, data io.Reader, path string) error {
 	// TODO: be able to check if we have enough disk space
 	var d storagemarket.MinerDeal
 	if err := p.deals.Get(propCid).Get(&d); err != nil {
 		return xerrors.Errorf("failed getting deal %s: %w", propCid, err)
 	}
 
-	tempfi, err := p.fs.CreateTemp()
-	if err != nil {
-		return xerrors.Errorf("failed to create temp file for data import: %w", err)
-	}
-	defer tempfi.Close()
-	cleanup := func() {
-		_ = tempfi.Close()
-		_ = p.fs.Delete(tempfi.Path())
-	}
+	ifUsePath := os.Getenv("MARKET_SHARE_OFFLINE_CAR")
 
-	log.Debugw("will copy imported file to local file", "propCid", propCid)
-	n, err := io.Copy(tempfi, data)
-	if err != nil {
-		cleanup()
-		return xerrors.Errorf("importing deal data failed: %w", err)
-	}
-	log.Debugw("finished copying imported file to local file", "propCid", propCid)
+	var tempPath filestore.Path
+	if ifUsePath == "true" {
+		tempPath = filestore.Path(path)
+	} else {
+		// copy to temp file
+		tempfi, err := p.fs.CreateTemp()
+		if err != nil {
+			return xerrors.Errorf("failed to create temp file for data import: %w", err)
+		}
+		defer tempfi.Close()
+		cleanup := func() {
+			_ = tempfi.Close()
+			_ = p.fs.Delete(tempfi.Path())
+		}
 
-	_ = n // TODO: verify n?
-
-	carSize := uint64(tempfi.Size())
-
-	_, err = tempfi.Seek(0, io.SeekStart)
-	if err != nil {
-		cleanup()
-		return xerrors.Errorf("failed to seek through temp imported file: %w", err)
-	}
-
-	proofType, err := p.spn.GetProofType(ctx, p.actor, nil)
-	if err != nil {
-		cleanup()
-		return xerrors.Errorf("failed to determine proof type: %w", err)
-	}
-	log.Debugw("fetched proof type", "propCid", propCid)
-
-	pieceCid, err := generatePieceCommitment(proofType, tempfi, carSize)
-	if err != nil {
-		cleanup()
-		return xerrors.Errorf("failed to generate commP: %w", err)
-	}
-	log.Debugw("generated pieceCid for imported file", "propCid", propCid)
-
-	if carSizePadded := padreader.PaddedSize(carSize).Padded(); carSizePadded < d.Proposal.PieceSize {
-		// need to pad up!
-		rawPaddedCommp, err := commp.PadCommP(
-			// we know how long a pieceCid "hash" is, just blindly extract the trailing 32 bytes
-			pieceCid.Hash()[len(pieceCid.Hash())-32:],
-			uint64(carSizePadded),
-			uint64(d.Proposal.PieceSize),
-		)
+		log.Debugw("will copy imported file to local file", "propCid", propCid)
+		n, err := io.Copy(tempfi, data)
 		if err != nil {
 			cleanup()
-			return err
+			return xerrors.Errorf("importing deal data failed: %w", err)
 		}
-		pieceCid, _ = commcid.DataCommitmentV1ToCID(rawPaddedCommp)
-	}
+		log.Debugw("finished copying imported file to local file", "propCid", propCid)
 
-	// Verify CommP matches
-	if !pieceCid.Equals(d.Proposal.PieceCID) {
-		cleanup()
-		return xerrors.Errorf("given data does not match expected commP (got: %s, expected %s)", pieceCid, d.Proposal.PieceCID)
+		_ = n // TODO: verify n?
+
+		_, err = tempfi.Seek(0, io.SeekStart)
+		if err != nil {
+			cleanup()
+			return xerrors.Errorf("failed to seek through temp imported file: %w", err)
+		}
+		tempPath = tempfi.Path()
+
+		enableVerify := os.Getenv("MARKET_ENABLE_OFFLINE_VERIFY")
+		if enableVerify == "true" {
+			carSize := uint64(tempfi.Size())
+
+			proofType, err := p.spn.GetProofType(ctx, p.actor, nil)
+			if err != nil {
+				cleanup()
+				return xerrors.Errorf("failed to determine proof type: %w", err)
+			}
+			log.Debugw("fetched proof type", "propCid", propCid)
+
+			pieceCid, err := generatePieceCommitment(proofType, tempfi, carSize)
+			if err != nil {
+				cleanup()
+				return xerrors.Errorf("failed to generate commP: %w", err)
+			}
+			log.Debugw("generated pieceCid for imported file", "propCid", propCid)
+
+			if carSizePadded := padreader.PaddedSize(carSize).Padded(); carSizePadded < d.Proposal.PieceSize {
+				// need to pad up!
+				rawPaddedCommp, err := commp.PadCommP(
+					// we know how long a pieceCid "hash" is, just blindly extract the trailing 32 bytes
+					pieceCid.Hash()[len(pieceCid.Hash())-32:],
+					uint64(carSizePadded),
+					uint64(d.Proposal.PieceSize),
+				)
+				if err != nil {
+					cleanup()
+					return err
+				}
+				pieceCid, _ = commcid.DataCommitmentV1ToCID(rawPaddedCommp)
+			}
+
+			// Verify CommP matches
+			if !pieceCid.Equals(d.Proposal.PieceCID) {
+				cleanup()
+				return xerrors.Errorf("given data does not match expected commP (got: %s, expected %s)", pieceCid, d.Proposal.PieceCID)
+			}
+		}
 	}
 
 	log.Debugw("will fire ProviderEventVerifiedData for imported file", "propCid", propCid)
 
-	return p.deals.Send(propCid, storagemarket.ProviderEventVerifiedData, tempfi.Path(), filestore.Path(""))
+	return p.deals.Send(propCid, storagemarket.ProviderEventVerifiedData, tempPath, filestore.Path(""))
 }
 
 func generatePieceCommitment(rt abi.RegisteredSealProof, rd io.Reader, pieceSize uint64) (cid.Cid, error) {
@@ -547,6 +559,7 @@ func (p *Provider) processDealStatusRequest(ctx context.Context, request *networ
 		PublishCid:    md.PublishCid,
 		DealID:        md.DealID,
 		FastRetrieval: md.FastRetrieval,
+		PublishEpoch:  md.PublishEpoch,
 	}, nil
 }
 

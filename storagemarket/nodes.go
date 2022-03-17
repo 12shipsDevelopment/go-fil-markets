@@ -61,10 +61,10 @@ type StorageCommon interface {
 	DealProviderCollateralBounds(ctx context.Context, size abi.PaddedPieceSize, isVerified bool) (abi.TokenAmount, abi.TokenAmount, error)
 
 	// OnDealSectorPreCommitted waits for a deal's sector to be pre-committed
-	OnDealSectorPreCommitted(ctx context.Context, provider address.Address, dealID abi.DealID, proposal market.DealProposal, publishCid *cid.Cid, cb DealSectorPreCommittedCallback) error
+	OnDealSectorPreCommitted(ctx context.Context, provider address.Address, dealID abi.DealID, proposal market.DealProposal, publishCid *cid.Cid, publishHeight abi.ChainEpoch, cb DealSectorPreCommittedCallback) error
 
 	// OnDealSectorCommitted waits for a deal's sector to be sealed and proved, indicating the deal is active
-	OnDealSectorCommitted(ctx context.Context, provider address.Address, dealID abi.DealID, sectorNumber abi.SectorNumber, proposal market.DealProposal, publishCid *cid.Cid, cb DealSectorCommittedCallback) error
+	OnDealSectorCommitted(ctx context.Context, provider address.Address, dealID abi.DealID, sectorNumber abi.SectorNumber, proposal market.DealProposal, publishCid *cid.Cid, publishHeight abi.ChainEpoch, cb DealSectorCommittedCallback) error
 
 	// OnDealExpiredOrSlashed registers callbacks to be called when the deal expires or is slashed
 	OnDealExpiredOrSlashed(ctx context.Context, dealID abi.DealID, onDealExpired DealExpiredCallback, onDealSlashed DealSlashedCallback) error
@@ -82,6 +82,7 @@ type PackingResult struct {
 type PublishDealsWaitResult struct {
 	DealID   abi.DealID
 	FinalCid cid.Cid
+	Height   abi.ChainEpoch
 }
 
 // StorageProviderNode are node dependencies for a StorageProvider
@@ -95,7 +96,7 @@ type StorageProviderNode interface {
 	WaitForPublishDeals(ctx context.Context, mcid cid.Cid, proposal market.DealProposal) (*PublishDealsWaitResult, error)
 
 	// OnDealComplete is called when a deal is complete and on chain, and data has been transferred and is ready to be added to a sector
-	OnDealComplete(ctx context.Context, deal MinerDeal, pieceSize abi.UnpaddedPieceSize, pieceReader io.Reader) (*PackingResult, error)
+	OnDealComplete(ctx context.Context, deal MinerDeal, pieceSize abi.UnpaddedPieceSize, pieceReader io.Reader, path string) (*PackingResult, error)
 
 	// GetMinerWorkerAddress returns the worker address associated with a miner
 	GetMinerWorkerAddress(ctx context.Context, addr address.Address, tok shared.TipSetToken) (address.Address, error)

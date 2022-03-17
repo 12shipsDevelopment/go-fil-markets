@@ -92,8 +92,9 @@ type MinerDeal struct {
 	market.ClientDealProposal
 	ProposalCid           cid.Cid
 	AddFundsCid           *cid.Cid
-	PublishCid            *cid.Cid
-	Miner                 peer.ID
+	PublishCid   *cid.Cid
+	PublishEpoch abi.ChainEpoch
+	Miner        peer.ID
 	Client                peer.ID
 	State                 StorageDealStatus
 	PiecePath             filestore.Path
@@ -247,6 +248,7 @@ type ClientDeal struct {
 	CreationTime      cbg.CborTime
 	TransferChannelID *datatransfer.ChannelID
 	SectorNumber      abi.SectorNumber
+	PublishEpoch      abi.ChainEpoch
 }
 
 // StorageProviderInfo describes on chain information about a StorageProvider
@@ -308,6 +310,7 @@ type ProviderDealState struct {
 	PublishCid    *cid.Cid
 	DealID        abi.DealID
 	FastRetrieval bool
+	PublishEpoch  abi.ChainEpoch
 }
 
 func curTime() cbg.CborTime {

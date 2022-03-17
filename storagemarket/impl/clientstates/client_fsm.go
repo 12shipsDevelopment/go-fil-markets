@@ -195,8 +195,9 @@ var ClientEvents = fsm.Events{
 		}),
 	fsm.Event(storagemarket.ClientEventDealAccepted).
 		From(storagemarket.StorageDealCheckForAcceptance).To(storagemarket.StorageDealProposalAccepted).
-		Action(func(deal *storagemarket.ClientDeal, publishMessage *cid.Cid) error {
+		Action(func(deal *storagemarket.ClientDeal, publishMessage *cid.Cid, publishEpoch abi.ChainEpoch) error {
 			deal.PublishMessage = publishMessage
+			deal.PublishEpoch = publishEpoch
 			deal.Message = ""
 			deal.AddLog("deal has been accepted by storage provider")
 			return nil

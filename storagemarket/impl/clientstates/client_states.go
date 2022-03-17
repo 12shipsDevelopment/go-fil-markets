@@ -200,7 +200,7 @@ func CheckForDealAcceptance(ctx fsm.Context, environment ClientDealEnvironment, 
 			return ctx.Trigger(storagemarket.ClientEventResponseDealDidNotMatch, *dealState.ProposalCid, deal.ProposalCid)
 		}
 
-		return ctx.Trigger(storagemarket.ClientEventDealAccepted, dealState.PublishCid)
+		return ctx.Trigger(storagemarket.ClientEventDealAccepted, dealState.PublishCid, dealState.PublishEpoch)
 	}
 
 	return waitAgain(ctx, environment, false, dealState.State)
@@ -256,7 +256,7 @@ func VerifyDealPreCommitted(ctx fsm.Context, environment ClientDealEnvironment, 
 		}
 	}
 
-	err := environment.Node().OnDealSectorPreCommitted(ctx.Context(), deal.Proposal.Provider, deal.DealID, deal.Proposal, deal.PublishMessage, cb)
+	err := environment.Node().OnDealSectorPreCommitted(ctx.Context(), deal.Proposal.Provider, deal.DealID, deal.Proposal, deal.PublishMessage, deal.PublishEpoch, cb)
 
 	if err != nil {
 		return ctx.Trigger(storagemarket.ClientEventDealPrecommitFailed, err)
@@ -275,7 +275,7 @@ func VerifyDealActivated(ctx fsm.Context, environment ClientDealEnvironment, dea
 		}
 	}
 
-	if err := environment.Node().OnDealSectorCommitted(ctx.Context(), deal.Proposal.Provider, deal.DealID, deal.SectorNumber, deal.Proposal, deal.PublishMessage, cb); err != nil {
+	if err := environment.Node().OnDealSectorCommitted(ctx.Context(), deal.Proposal.Provider, deal.DealID, deal.SectorNumber, deal.Proposal, deal.PublishMessage, deal.PublishEpoch, cb); err != nil {
 		return ctx.Trigger(storagemarket.ClientEventDealActivationFailed, err)
 	}
 
