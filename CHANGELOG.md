@@ -1,18 +1,26 @@
 # go-fil-markets changelog
 
-# go-fil-markets v1.19.2
-
-reverts to libp2p 0.17.0
-
-### Changelog
+# go-fil-markets v1.20.1
 - github.com/filecoin-project/go-fil-markets:
-  - Downgrade libp2p (#687) ([filecoin-project/go-fil-markets#687](https://github.com/filecoin-project/go-fil-markets/pull/687))
+  - Upgrade index-provider with the latest metadata format (#688) ([filecoin-project/go-fil-markets#688](https://github.com/filecoin-project/go-fil-markets/pull/688))
+  - release: v1.20.0 ([filecoin-project/go-fil-markets#686](https://github.com/filecoin-project/go-fil-markets/pull/686))
 
-### Contributors
+Contributors
 
 | Contributor | Commits | Lines ± | Files Changed |
 |-------------|---------|---------|---------------|
-| Hannah Howard | 1 | +42/-96 | 3 |
+| Masih H. Derkani | 1 | +34/-28 | 4 |
+
+# go-fil-markets v1.20.0
+- github.com/filecoin-project/go-fil-markets:
+  - Index publishing work (#673) ([filecoin-project/go-fil-markets#673](https://github.com/filecoin-project/go-fil-markets/pull/673))
+  - Merge branch 'release/v1.19.1'
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| Aarsh Shah | 1 | +890/-219 | 22 |
 
 # go-fil-markets v1.19.1
 

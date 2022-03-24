@@ -41,6 +41,8 @@ type ProviderDealEnvironment interface {
 	ReadCAR(path string) (*carv2.Reader, error)
 
 	RegisterShard(ctx context.Context, pieceCid cid.Cid, path string, eagerInit bool) error
+	AnnounceIndex(ctx context.Context, deal storagemarket.MinerDeal) (cid.Cid, error)
+	RemoveIndex(ctx context.Context, proposalCid cid.Cid) error
 
 	FinalizeBlockstore(proposalCid cid.Cid) error
 	TerminateBlockstore(proposalCid cid.Cid, path string) error
@@ -405,6 +407,15 @@ func HandoffDeal(ctx fsm.Context, environment ProviderDealEnvironment, deal stor
 		log.Error(err)
 	}
 
+	// announce the deal to the network indexer
+	annCid, err := environment.AnnounceIndex(ctx.Context(), deal)
+	if err != nil {
+		log.Errorw("failed to announce index via reference provider", "proposalCid", deal.ProposalCid, "err", err)
+	} else {
+		log.Infow("deal announcement sent to index provider", "advertisementCid", annCid, "shard-key", deal.Proposal.PieceCID,
+			"proposalCid", deal.ProposalCid)
+	}
+
 	log.Infow("successfully handed off deal to sealing subsystem", "pieceCid", deal.Proposal.PieceCID, "proposalCid", deal.ProposalCid)
 	return ctx.Trigger(storagemarket.ProviderEventDealHandedOff)
 }
@@ -556,6 +567,9 @@ func WaitForDealCompletion(ctx fsm.Context, environment ProviderDealEnvironment,
 
 	// Called when the deal expires
 	expiredCb := func(err error) {
+		// Ask the indexer to remove this deal
+		environment.RemoveIndex(ctx.Context(), deal.ProposalCid)
+
 		if err != nil {
 			_ = ctx.Trigger(storagemarket.ProviderEventDealCompletionFailed, xerrors.Errorf("deal expiration err: %w", err))
 		} else {
@@ -565,6 +579,9 @@ func WaitForDealCompletion(ctx fsm.Context, environment ProviderDealEnvironment,
 
 	// Called when the deal is slashed
 	slashedCb := func(slashEpoch abi.ChainEpoch, err error) {
+		// Ask the indexer to remove this deal
+		environment.RemoveIndex(ctx.Context(), deal.ProposalCid)
+
 		if err != nil {
 			_ = ctx.Trigger(storagemarket.ProviderEventDealCompletionFailed, xerrors.Errorf("deal slashing err: %w", err))
 		} else {
