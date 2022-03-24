@@ -1,5 +1,104 @@
 # go-fil-markets changelog
 
+# go-fil-markets v1.19.2
+
+reverts to libp2p 0.17.0
+
+### Changelog
+- github.com/filecoin-project/go-fil-markets:
+  - Downgrade libp2p (#687) ([filecoin-project/go-fil-markets#687](https://github.com/filecoin-project/go-fil-markets/pull/687))
+
+### Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| Hannah Howard | 1 | +42/-96 | 3 |
+
+# go-fil-markets v1.19.1
+
+- github.com/filecoin-project/go-fil-markets:
+  - feat(clientstates): handle payment chanel ready to go (#677) ([filecoin-project/go-fil-markets#677](https://github.com/filecoin-project/go-fil-markets/pull/677))
+  - release: v1.19.0 ([filecoin-project/go-fil-markets#672](https://github.com/filecoin-project/go-fil-markets/pull/672))
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| Hannah Howard | 1 | +23/-5 | 6 |
+
+# go-fil-markets v1.19.0
+
+- github.com/filecoin-project/go-fil-markets:
+  - Update to go-data-transfer v1.14.0 / go-libp2p v0.18.0-rc1 (#669) ([filecoin-project/go-fil-markets#669](https://github.com/filecoin-project/go-fil-markets/pull/669))
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| Hannah Howard | 1 | +163/-119 | 9 |
+| dirkmc | 1 | +20/-0 | 1 |
+
+# go-fil-markets v1.18.0
+
+Reverts the following commits:
+- github.com/filecoin-project/go-fil-markets:
+  - log advertisement cid for announcement and update deps (#667) ([filecoin-project/go-fil-markets#667](https://github.com/filecoin-project/go-fil-markets/pull/667))
+  - release: v1.15.0 ([filecoin-project/go-fil-markets#661](https://github.com/filecoin-project/go-fil-markets/pull/661))
+  - retrieve by any CID (not just root CID) and reference provider integration (#629) ([filecoin-project/go-fil-markets#629](https://github.com/filecoin-project/go-fil-markets/pull/629))
+
+The revert commit is:
+- github.com/filecoin-project/go-fil-markets:
+  - revert index provider PR #629 and associated PRs (#670) ([filecoin-project/go-fil-markets#670](https://github.com/filecoin-project/go-fil-markets/pull/670))
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| dirkmc | 2 | +1038/-1053 | 45 |
+| Aarsh Shah | 1 | +23/-19 | 5 |
+| Dirk McCormick | 1 | +11/-0 | 1 |
+
+# go-fil-markets v1.14.1
+
+- github.com/filecoin-project/go-fil-markets:
+  - refactor: isolate commp in its own package to avoid exposing pulling filecoin-ffi (#659) ([filecoin-project/go-fil-markets#659](https://github.com/filecoin-project/go-fil-markets/pull/659))
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| dirkmc | 1 | +5/-4 | 3 |
+
+# go-fil-markets v1.14.0
+
+- github.com/filecoin-project/go-fil-markets:
+  - add SeekStart method to inflator reader (#656) ([filecoin-project/go-fil-markets#656](https://github.com/filecoin-project/go-fil-markets/pull/656))
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| dirkmc | 1 | +317/-52 | 10 |
+
+# go-fil-markets v1.13.6 
+
+Add timeout for awaiting restart
+
+### Changelog
+
+- github.com/filecoin-project/go-fil-markets:
+  - Timeout provider after waiting a period of time for transfer to restart (#655) ([filecoin-project/go-fil-markets#655](https://github.com/filecoin-project/go-fil-markets/pull/655))
+
+### Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| Hannah Howard | 1 | +204/-86 | 10 |
+
+# go-fil-markets v1.13.5
+
+Update to context data stores
+
 # go-fil-markets 1.13.4
 
 - github.com/filecoin-project/go-fil-markets:
