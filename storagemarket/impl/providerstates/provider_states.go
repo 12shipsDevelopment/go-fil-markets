@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"strings"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/ipfs/go-cid"
@@ -489,11 +489,20 @@ func recordPiece(environment ProviderDealEnvironment, deal storagemarket.MinerDe
 // CleanupDeal clears the filestore once we know the mining component has read the data and it is in a sealed sector
 func CleanupDeal(ctx fsm.Context, environment ProviderDealEnvironment, deal storagemarket.MinerDeal) error {
 	if deal.PiecePath != "" {
-		keepCar := os.Getenv("MARKET_KEEP_OFFLINE_CAR")
-		if keepCar != "true" {
+		// TODO: octopus: best way is to add 'isoffline' field in deal rather than checking from filename.
+		if strings.Contains(string(deal.PiecePath), "fstmp") {
 			err := environment.FileStore().Delete(deal.PiecePath)
 			if err != nil {
 				log.Warnf("deleting piece at path %s: %w", deal.PiecePath, err)
+			}
+		} else {
+			keepCar := os.Getenv("MARKET_KEEP_OFFLINE_CAR")
+			if keepCar != "true" {
+				// use os remove, since car path is not managed in deal-staging filestore.
+				err := os.Remove(string(deal.PiecePath))
+				if err != nil {
+					log.Warnf("deleting piece at path %s: %w", deal.PiecePath, err)
+				}
 			}
 		}
 	}
