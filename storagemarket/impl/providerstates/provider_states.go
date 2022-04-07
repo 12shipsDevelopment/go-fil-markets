@@ -258,11 +258,20 @@ func ReserveProviderFunds(ctx fsm.Context, environment ProviderDealEnvironment, 
 		return ctx.Trigger(storagemarket.ProviderEventNodeErrored, xerrors.Errorf("acquiring chain head: %w", err))
 	}
 
-	waddr, err := node.GetMinerWorkerAddress(ctx.Context(), deal.Proposal.Provider, tok)
-	if err != nil {
-		return ctx.Trigger(storagemarket.ProviderEventNodeErrored, xerrors.Errorf("looking up miner worker: %w", err))
+	var waddr address.Address
+	if os.Getenv("ADDBALANCE_USE_WORKER") == "true" {
+		waddr, err = node.GetMinerWorkerAddress(ctx.Context(), deal.Proposal.Provider, tok)
+		if err != nil {
+			return ctx.Trigger(storagemarket.ProviderEventNodeErrored, xerrors.Errorf("looking up miner worker: %w", err))
+		}
+	} else {
+		waddr, err = node.GetAddBalanceAddress(ctx.Context(), deal.Proposal.Provider, tok)
+		if err != nil {
+			return ctx.Trigger(storagemarket.ProviderEventNodeErrored, xerrors.Errorf("looking up add balance address: %w", err))
+		}
 	}
 
+	log.Infof("octopus: ReserveFunds from address: %s", waddr)
 	mcid, err := node.ReserveFunds(ctx.Context(), waddr, deal.Proposal.Provider, deal.Proposal.ProviderCollateral)
 	if err != nil {
 		return ctx.Trigger(storagemarket.ProviderEventNodeErrored, xerrors.Errorf("reserving funds: %w", err))

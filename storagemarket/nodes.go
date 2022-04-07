@@ -99,6 +99,8 @@ type StorageProviderNode interface {
 
 	// GetMinerWorkerAddress returns the worker address associated with a miner
 	GetMinerWorkerAddress(ctx context.Context, addr address.Address, tok shared.TipSetToken) (address.Address, error)
+	
+	GetAddBalanceAddress(ctx context.Context, addr address.Address, tok shared.TipSetToken) (address.Address, error)
 
 	// GetDataCap gets the current data cap for addr
 	GetDataCap(ctx context.Context, addr address.Address, tok shared.TipSetToken) (*verifreg.DataCap, error)
