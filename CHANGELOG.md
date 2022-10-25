@@ -1,5 +1,54 @@
 # go-fil-markets changelog
 
+# go-fil-markets v1.24.3
+
+Merge back in v9 actor changes, also includes additional identity cid fixes
+
+# Changelog
+
+- github.com/filecoin-project/go-fil-markets:
+  - Update ffi and update markets to v9 (#751) (#761) ([filecoin-project/go-fil-markets#761](https://github.com/filecoin-project/go-fil-markets/pull/761))
+  - fix: store identity CIDs in CARs for online deals (#749) ([filecoin-project/go-fil-markets#749](https://github.com/filecoin-project/go-fil-markets/pull/749))
+  - chore: extract Provider piece logic to separate file (#750) ([filecoin-project/go-fil-markets#750](https://github.com/filecoin-project/go-fil-markets/pull/750))
+  - Merge branch 'release/v1.24.2'
+
+### Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| Rod Vagg | 2 | +245/-228 | 7 |
+| Hannah Howard | 1 | +35/-68 | 24 |
+
+# go-fil-markets v1.24.2
+
+identity payload CID fixes, support for publishing with user defined metadata
+
+note: a v1.24.1-rc release was made, which contained changes not in this release
+so v1.24.1 was skipped
+
+### Changelog
+
+- github.com/filecoin-project/go-fil-markets:
+  - Feat/support custom metadata (#759) ([filecoin-project/go-fil-markets#759](https://github.com/filecoin-project/go-fil-markets/pull/759))
+  - Revert "Update ffi and update markets to v9 (#751)" (#755) ([filecoin-project/go-fil-markets#755](https://github.com/filecoin-project/go-fil-markets/pull/755))
+  - Update ffi and update markets to v9 (#751) ([filecoin-project/go-fil-markets#751](https://github.com/filecoin-project/go-fil-markets/pull/751))
+  - feat(retrievalmarkets): expose GetDynamicAsk (#748) ([filecoin-project/go-fil-markets#748](https://github.com/filecoin-project/go-fil-markets/pull/748))
+  - feat: handle retrieval queries for unindexed identity payload CIDs (#747) ([filecoin-project/go-fil-markets#747](https://github.com/filecoin-project/go-fil-markets/pull/747))
+  - release: v1.24.0 ([filecoin-project/go-fil-markets#745](https://github.com/filecoin-project/go-fil-markets/pull/745))
+
+
+### Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| Rod Vagg | 1 | +406/-88 | 7 |
+| Maxim | 2 | +150/-43 | 6 |
+| Hannah Howard | 3 | +103/-54 | 28 |
+| Geoff Stuart | 1 | +35/-68 | 24 |
+| dtynn | 4 | +22/-20 | 4 |
+| nick black | 1 | +1/-1 | 1 |
+
+
 # go-fil-markets v1.24.0
 
 - github.com/filecoin-project/go-fil-markets:
