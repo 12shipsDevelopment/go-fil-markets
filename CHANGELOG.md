@@ -1,5 +1,27 @@
 # go-fil-markets changelog
 
+# go-fil-markets v1.25.2
+
+- github.com/filecoin-project/go-fil-markets:
+  - chore(deps): upgrade to index provider v0.9.1 (#766) ([filecoin-project/go-fil-markets#766](https://github.com/filecoin-project/go-fil-markets/pull/766))
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| Hannah Howard | 1 | +505/-213 | 12 |
+
+# go-fil-markets v1.25.1
+
+- github.com/filecoin-project/go-fil-markets:
+  - feat: add API methods to subscribe to retrieval query and validation events (#765) ([filecoin-project/go-fil-markets#765](https://github.com/filecoin-project/go-fil-markets/pull/765))
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| dirkmc | 1 | +99/-4 | 4 |
+
 # go-fil-markets v1.24.3
 
 Merge back in v9 actor changes, also includes additional identity cid fixes
