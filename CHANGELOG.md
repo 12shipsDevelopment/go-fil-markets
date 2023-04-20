@@ -1,5 +1,29 @@
 # go-fil-markets changelog
 
+# go-fil-markets v1.26.0
+ 
+- github.com/filecoin-project/go-fil-markets:
+  - refactor: add proposal cid parameter to PieceStore.AddDealForPiece (#768) ([filecoin-project/go-fil-markets#768](https://github.com/filecoin-project/go-fil-markets/pull/768))
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| dirkmc | 1 | +8/-7 | 5 |
+
+# go-fil-markets v1.25.3
+
+- github.com/filecoin-project/go-fil-markets:
+  - Upgrade to the latest index-provider `v.10.0` (#774) ([filecoin-project/go-fil-markets#774](https://github.com/filecoin-project/go-fil-markets/pull/774))
+  - Merge branch 'release/v1.25.2'
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
+| Masih H. Derkani | 1 | +11/-12 | 4 |
+
+
 # go-fil-markets v1.25.2
 
 - github.com/filecoin-project/go-fil-markets:
