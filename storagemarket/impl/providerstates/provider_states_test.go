@@ -14,14 +14,14 @@ import (
 
 	"github.com/ipfs/go-cid"
 	carv2 "github.com/ipld/go-car/v2"
-	"github.com/libp2p/go-libp2p-core/peer"
+	"github.com/libp2p/go-libp2p/core/peer"
 	mh "github.com/multiformats/go-multihash"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/xerrors"
 
 	"github.com/filecoin-project/go-address"
-	datatransfer "github.com/filecoin-project/go-data-transfer"
+	datatransfer "github.com/filecoin-project/go-data-transfer/v2"
 	"github.com/filecoin-project/go-state-types/abi"
 	"github.com/filecoin-project/go-state-types/big"
 	"github.com/filecoin-project/go-state-types/builtin"
@@ -407,7 +407,7 @@ func TestVerifyData(t *testing.T) {
 			},
 			dealInspector: func(t *testing.T, deal storagemarket.MinerDeal, env *fakeEnvironment) {
 				tut.AssertDealState(t, storagemarket.StorageDealFailing, deal.State)
-				//require.Contains(t, deal.Message, "finalize error")
+				// require.Contains(t, deal.Message, "finalize error")
 			},
 		},
 
@@ -1206,7 +1206,7 @@ func mkPieceCid(input string) cid.Cid {
 	case nil:
 		return c
 	default:
-		//panic(err)
+		// panic(err)
 	}
 
 	sum := sha256.Sum256(data)
