@@ -1,22 +1,38 @@
 # go-fil-markets changelog
 
-# go-fil-markets v1.27.0
+# go-fil-markets v1.28.3
 
-This release updates go-fil-markets to go-data-transfer v2, and contains a major simplication of the provider code based on the data transfer update
+boxo migration
 
 ### Changelog
 
 - github.com/filecoin-project/go-fil-markets:
-  - Data Transfer V2 Integration (#757) ([filecoin-project/go-fil-markets#757](https://github.com/filecoin-project/go-fil-markets/pull/757))
-  - Merge branch 'release/v1.26.1'
-- github.com/hannahhoward/cbor-gen-for (v0.0.0-20200817222906-ea96cece81f1 -> v0.0.0-20230214144701-5d17c9d5243c):
-  - Optimized "Mode" does not always work ([hannahhoward/cbor-gen-for#2](https://github.com/hannahhoward/cbor-gen-for/pull/2))
+  - chore: migrate to boxo (#792) ([filecoin-project/go-fil-markets#792](https://github.com/filecoin-project/go-fil-markets/pull/792))
 
 ### Contributors
 
 | Contributor | Commits | Lines ± | Files Changed |
 |-------------|---------|---------|---------------|
+| Jorropo | 1 | +90/-102 | 27 |
+
+
+# go-fil-markets v1.28.0
+
+Generating Changelog for github.com/filecoin-project/go-fil-markets v1.26.1..49cb4a6b647a1fa715d7a114e89534212d617c96
+- github.com/filecoin-project/go-fil-markets:
+  - chore: update dependencoies (#790) ([filecoin-project/go-fil-markets#790](https://github.com/filecoin-project/go-fil-markets/pull/790))
+  - Chore/use go libipni (#789) ([filecoin-project/go-fil-markets#789](https://github.com/filecoin-project/go-fil-markets/pull/789))
+  - Data Transfer V2 Integration (#757) ([filecoin-project/go-fil-markets#757](https://github.com/filecoin-project/go-fil-markets/pull/757))
+- github.com/hannahhoward/cbor-gen-for (v0.0.0-20200817222906-ea96cece81f1 -> v0.0.0-20230214144701-5d17c9d5243c):
+  - Optimized "Mode" does not always work ([hannahhoward/cbor-gen-for#2](https://github.com/hannahhoward/cbor-gen-for/pull/2))
+
+Contributors
+
+| Contributor | Commits | Lines ± | Files Changed |
+|-------------|---------|---------|---------------|
 | Hannah Howard | 1 | +2717/-5940 | 81 |
+| Andrew Gillis | 1 | +2356/-2362 | 19 |
+| Jacob Heun | 1 | +137/-243 | 4 |
 | Peter Rabbitson | 1 | +1/-1 | 1 |
 
 # go-fil-markets v1.26.1
